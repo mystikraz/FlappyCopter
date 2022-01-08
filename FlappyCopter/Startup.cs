@@ -27,28 +27,12 @@ namespace FlappyCopter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                // Heroku provides PostgreSQL connection URL via env variable
-                var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            var IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
-                // Parse connection URL to connection string for Npgsql
-                connUrl = connUrl.Replace("postgres://", string.Empty);
+            var connectionString = IsDevelopment ? Configuration.GetConnectionString("DefaultConnection") : GetHerokuConnectionString();
 
-                var pgUserPass = connUrl.Split("@")[0];
-                var pgHostPortDb = connUrl.Split("@")[1];
-                var pgHostPort = pgHostPortDb.Split("/")[0];
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-                var pgDb = pgHostPortDb.Split("/")[1];
-                var pgUser = pgUserPass.Split(":")[0];
-                var pgPass = pgUserPass.Split(":")[1];
-                var pgHost = pgHostPort.Split(":")[0];
-                var pgPort = pgHostPort.Split(":")[1];
-
-                var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;Pooling=true;Integrated Security=true;";
-                options.UseNpgsql(connStr);
-            });
-                
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -87,6 +71,17 @@ namespace FlappyCopter
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+        private static string GetHerokuConnectionString()
+        {
+            string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            var databaseUri = new Uri(connectionUrl);
+
+            string db = databaseUri.LocalPath.TrimStart('/');
+            string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+            return $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
         }
     }
 }
