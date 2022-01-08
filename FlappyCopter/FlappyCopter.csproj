@@ -20,10 +20,10 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
-	<Target Name="PrePublishTarget" AfterTargets="Publish">
+	<!--<Target Name="PrePublishTarget" AfterTargets="Publish">
 		<Exec Command="dotnet tool install --global dotnet-ef --version 5.0.11" />
 		<Exec Command="echo  &quot;Migrating Database ...&quot;" />
 		<Exec Command="dotnet ef database update" />
-	</Target>
+	</Target>-->
 	
 </Project>
