@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-FlappyCopter-DDD892E8-7F82-421B-A7AE-B5A0A4FA1AF2</UserSecretsId>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+	  <RollForward>Major</RollForward>
   </PropertyGroup>
 
   <ItemGroup>
