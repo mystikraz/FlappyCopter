@@ -16,7 +16,6 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
   </ItemGroup>
 	<Target Name="PrePublishTarget" AfterTargets="Publish">
-		<Exec Command="dotnet tool uninstall dotnet-ef -g" />
 		<Exec Command="dotnet tool install --global dotnet-ef --version 5.0.1" />
 		<Exec Command="echo  &quot;Migrating Database ...&quot;" />
 		<Exec Command="dotnet ef database update" />
