@@ -45,7 +45,7 @@ namespace FlappyCopter
                 var pgHost = pgHostPort.Split(":")[0];
                 var pgPort = pgHostPort.Split(":")[1];
 
-                var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require";
+                var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;Pooling=true;Integrated Security=true;";
                 options.UseNpgsql(connStr);
             });
                 
